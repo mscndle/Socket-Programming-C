@@ -46,23 +46,6 @@ int main() {
 		exit(1);
 	}
 
-// 	 // loop through all the results and bind to the first we can
-//     for(p = servinfo; p != NULL; p = p->ai_next) {
-//         if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-//             perror("server: socket");
-// 			continue; 
-// 		}
-
-//         if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
-//                 sizeof(int)) == -1) {
-//             perror("setsockopt");
-// exit(1); }
-//         if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-//             close(sockfd);
-//             perror("server: bind");
-// continue; }
-// break; }
-
 	//Create a socket
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	printf("initial server socket descriptor: %d\n", sockfd);
@@ -71,7 +54,7 @@ int main() {
 	bind(sockfd, res->ai_addr, res->ai_addrlen);
 
 	//Connect (if client)	
-
+	//--	
 
 	//Listen (if server)
 	printf("Listening for incoming connections...\n");
@@ -95,7 +78,7 @@ int main() {
 	
 
 	//send() and recv() - TCP (OR)
-
+	
 
 
 	//sendto() and recvfrom() - UDP
