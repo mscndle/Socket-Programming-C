@@ -30,13 +30,14 @@ int main() {
 	}
 
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	printf("client socket descriptor: %d\n", sockfd);
 
 	//bind(sockfd, res->ai_addr, res->ai_addrlen);
 	//clients don't need to bind
 
-	printf("connecting now...\n");
+	printf("Attempting to connect now...\n");
 	if ((connStatus = connect(sockfd, res->ai_addr, res->ai_addrlen)) == -1) {
-		fprintf(stderr, "Error on connecting: %d", errno);
+		fprintf(stderr, "Error on connecting: %d\n", errno);
 	} else {
 		printf("yay. connected!\n");
 	}

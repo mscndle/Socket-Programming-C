@@ -65,6 +65,7 @@ int main() {
 
 	//Create a socket
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	printf("initial server socket descriptor: %d\n", sockfd);
 
 	//Bind the host to the socket (if listening), to the port passed into getaddrinfo
 	bind(sockfd, res->ai_addr, res->ai_addrlen);
@@ -73,7 +74,7 @@ int main() {
 
 
 	//Listen (if server)
-	printf("Entering listen mode:\n");
+	printf("Listening for incoming connections...\n");
 	while (1) {		
 		if (listen(sockfd, BACKLOG) == -1) {
 			//fprintf(stderr, "%s\n", perror(errno));
@@ -83,15 +84,17 @@ int main() {
 			addr_size = sizeof their_addr;
 			new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
 			
-			printf("connection established");
-			printf("new socket descriptor: %d\n", new_fd);			
+			printf("connection established\n");
+			printf("new socket descriptor: %d\n", new_fd);
 
+			int clientAddr = (((struct sockaddr_in *)&their_addr)->sin_addr.s_addr);
+
+			printf("client's address: %d\n", clientAddr);
 		}			
 	}
 	
 
 	//send() and recv() - TCP (OR)
-
 
 
 
