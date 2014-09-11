@@ -8,10 +8,10 @@ Telnet to the host that the server is running on and it will return a "Hello Cli
    Client that prints out the messages sent by the server
    Currently there is a bug in this implementation - 9/10/14
 <code>
-    mscndle$ ./tcpclient 
-    client socket descriptor: 4
-    Attempting to connect now...
-    yay. connected!
-    client: connecting to 0.0.0.0
-    Segmentation fault: 11
+    mscndle$ ./tcpclient<br>
+    client socket descriptor: 4<br>
+    Attempting to connect now...<br>
+    yay. connected!<br>
+    client: connecting to 0.0.0.0<br>
+    Segmentation fault: 11<br>
 </code>
