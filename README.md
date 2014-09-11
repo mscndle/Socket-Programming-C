@@ -26,5 +26,7 @@ Implementations completed -
 
 
 Disclaimer:
-A large part of the code in this project has been taken from Beej's guide to network programming
+<p>
+    A large part of the code in this project has been taken from Beej's guide to network programming
+</p>
 <p>http://beej.us/guide/bgnet/</p>
