@@ -5,6 +5,10 @@
 #include <netdb.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
 
 #define MYPORT "3490"
 #define BACKLOG 10
@@ -14,6 +18,7 @@ int socket(int domain, int type, int protocol);
 //int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
 int listen(int sockfd, int backlog);
 int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+int gethostname(char *hostname, size_t size);
 
 //STEPS:
 //getaddrinfo()	
@@ -23,6 +28,15 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 //listen()	-If you're a server
 //accept()
 
+//Get sockaddr, IPv4 or IPv6
+void *get_in_addr(struct sockaddr *sa) {
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	}
+
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
 
 
 int main() {
@@ -31,6 +45,7 @@ int main() {
 	int listenStatus;
 	int sockfd, new_fd;	//for this host and connecting client host
 	struct addrinfo hints, *res;
+	char s[INET6_ADDRSTRLEN];
 	
 	struct sockaddr_storage their_addr;	//to store the client's addr
 	socklen_t addr_size;				//client's addr info size
@@ -45,6 +60,16 @@ int main() {
 		fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
 		exit(1);
 	}
+
+	// GETTING HOSTNAME
+	size_t size = 8;
+	char hostname;
+	int hostResult = gethostname(&hostname, size);
+	if (hostResult == -1) {
+		printf("error on gethostname");
+	}
+	printf("hostnameResult = %d\n", hostResult);
+	printf("hostname = %s\n", &hostname);
 
 	//Create a socket
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
@@ -66,25 +91,32 @@ int main() {
 		} else {
 			addr_size = sizeof their_addr;
 			new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+			if (new_fd == -1) {
+				perror("accept");
+				continue;
+			}
+
+			inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s);
+			printf("server: got connection from %s\n", s);
 			
-			printf("connection established\n");
-			printf("new socket descriptor: %d\n", new_fd);
+			// printf("Connection established...\n");
+			// printf("New socket descriptor: %d\n", new_fd);
 
-			int clientAddr = (((struct sockaddr_in *)&their_addr)->sin_addr.s_addr);
-
-			printf("client's address: %d\n", clientAddr);
+			if (send(new_fd, "Hello, Client!", 14, 0) == -1) {
+				perror("send");				
+			}			
+			close(new_fd);
+			exit(0);
 		}			
+		close(new_fd);
 	}
-	
 
-	//send() and recv() - TCP (OR)
-	
-
-
-	//sendto() and recvfrom() - UDP
-
-
-
-
-
+	return 0;
 }
+
+
+
+
+
+
+
